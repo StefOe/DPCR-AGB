@@ -1,0 +1,72 @@
+# @package data
+
+sparse_xy_treeadd_eval:
+  test_transform:
+    - transform: RadiusObjectAdder
+      params:
+        areas: {
+          treeDB: { type: object },
+        }
+        root_folder: ${data.dataroot}
+        dataset_name: treeDB
+        processed_folder: processed_treeDB_ALS
+        split: train
+        rot_x: 0.0
+        rot_y: 0.0
+        rot_z: 180
+        min_radius: 15.1
+        max_radius: 20
+        n_max_objects: { scene: 10 }
+        adjust_point_density: False
+        in_memory: True
+        zero_center_z: True
+        p: 1.0
+    - transform: ScalePos
+      params:
+        scale_x: ${data.x_scale}
+        scale_y: ${data.y_scale}
+        scale_z: ${data.z_scale}
+        op: "div"
+    - transform: MoveCenterPosPerSample
+      params:
+        center_x: ${data.x_center}
+        center_y: ${data.y_center}
+    - transform: StartZFromZero
+    - transform: Polygon2dExtend
+      params:
+        polygon: [
+          [ 0., 0.5 ], [ 0.25, 0.9330127 ], [ 0.75, 0.9330127 ],
+          [ 1., 0.5 ], [ 0.75, 0.0669873 ], [ 0.25, 0.0669873 ]
+        ]
+        skip_list: ${data.skip_list}
+    - transform: MaxPoints
+      params:
+        num: 16000
+        skip_list: ${data.skip_list}
+    - transform: MinPoints
+      params:
+        num: 500
+        skip_list: ${data.skip_list}
+    - transform: XYZFeature
+      params:
+        add_x: False
+        add_y: False
+        add_z: True
+    - transform: AddOnes
+    - transform: AddXYDistanceToCenter
+      params:
+        center_x: ${data.x_center}
+        center_y: ${data.y_center}
+    - transform: AddFeatsByKeys
+      params:
+        list_add_to_x: [ True, True, True ]
+        feat_names: [ ones, pos_z, xy_distance ]
+        delete_feats: [ True, True, True ]
+        input_nc_feats: [ 1, 1, 1 ]
+    - transform: GridSampling3D
+      params:
+        size: ${data.first_subsampling}
+        quantize_coords: True
+        mode: "last"
+  train_transform: ${data.sparse_xy_treeadd_eval.test_transform}
+  val_transform: ${data.sparse_xy_treeadd_eval.test_transform}

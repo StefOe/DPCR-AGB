@@ -1,0 +1,5 @@
+# @package models
+
+SimplestNet:
+  class: simplestnet.SimplestNet
+  conv_type: "PARTIAL_DENSE"

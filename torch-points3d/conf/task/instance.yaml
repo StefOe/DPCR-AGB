@@ -1,0 +1,7 @@
+# @package task
+defaults:
+  - /task/default
+  - override /data@_group_: instance/default
+  - override /models@_group_: instance/default
+
+name: instance

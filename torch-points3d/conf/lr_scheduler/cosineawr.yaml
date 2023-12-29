@@ -1,0 +1,5 @@
+# @package _group_
+class: CosineAnnealingWarmRestarts
+params: 
+  T_0: 10
+  T_mult: 2

@@ -1,0 +1,14 @@
+# @package models
+
+PointNext:
+  class: pointnext.PointNext
+  conv_type: "PARTIAL_DENSE"
+  arch: "pointnext_s"
+  radius: ${data.first_subsampling}
+  radius_scaling: 2
+  nsample: 32
+  stride: 4
+  activation: relu
+  num_points: 8192
+  use_mlps: True
+

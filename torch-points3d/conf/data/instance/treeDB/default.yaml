@@ -1,0 +1,47 @@
+# @package data
+class: las_dataset.LasDataset
+name: LASRegression
+dataset_name: treeDB
+task: instance
+dataroot: data
+transform_type: ???
+xy_radius: 30
+x_scale: 6
+y_scale: 6
+z_scale: 6
+x_center: 0.5
+y_center: 0.5
+first_subsampling: 0.1
+split_col: "split"
+log_train_metrics: False
+save_local_stats: False
+min_pts_outer: 10
+min_pts_inner: 0
+# if samples are stored, you need to reprocess file when you change anything below (until center_z)
+targets: {
+  height_m: { task: mol, num_mixtures: 10, class_tol: 1, weight: 0.25 }, # tolerance of 1m
+  mean_crown_diameter_m: { task: mol, num_mixtures: 10, class_tol: 0.1, weight: 0.25 }, # tolerance of 10cm
+  DBH_cm: { task: mol, num_mixtures: 10, class_tol: 1, weight: 0.25 }, # tolerance of 1cm
+  tree_species: { task: classification, class_names: [ RGR, BOG, DGR, Rest ],
+                  class_mapping: {
+                    "Picea abies": 0, "Fagus sylvatica": 1, "Pseudotsuga menziesii": 2,
+                    "Abies alba": 3, "Quercus petraea": 3, "QUERCUS": 3, "Quercus rubra": 3,
+                    "Quercus robur": 3, "Larix decidua": 3, "Tsuga heterophylla": 3, "Sorbus torminalis": 3,
+                  } },
+} # metrics: m m cm
+"features": [ "return_number", "classification" ]
+stats: [ ]
+skip_list: [ "y_mol", "y_mol_mask", "y_cls", "y_cls_mask", "y_reg", "y_reg_mask" ]
+pre_transform:
+  - transform: DBSCANZOutlierRemoval
+    params:
+      eps: 1.5 # in m
+      min_samples: 10
+      skip_list: ${data.skip_list}
+  - transform: StartZFromZero
+  - transform: CenterXYbyZ
+    params:
+      center_x: 0
+      center_y: 0
+      z_thresh_min: 0.0 # 0 cm over lowest point
+      z_thresh_max: 2.5 # 2.5 m over lowest point

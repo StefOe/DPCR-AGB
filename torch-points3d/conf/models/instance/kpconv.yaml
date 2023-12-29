@@ -1,0 +1,89 @@
+# @package models
+
+KPConv:
+  class: kpconv.KPConv
+  conv_type: "PARTIAL_DENSE"
+  config:
+    ##################
+    # Input parameters
+    ##################
+
+    # Dimension of input points
+    in_points_dim: 3
+
+    # Dimension of input features
+    in_features_dim: FEAT
+
+    # Radius of the input sphere (ignored for models, only used for point clouds)
+    in_radius: 1.0
+
+    ##################
+    # Model parameters
+    ##################
+
+    # Architecture definition. List of blocks
+    architecture: [ 'simple',
+                    'resnetb',
+                    'resnetb_strided',
+                    'resnetb',
+                    'resnetb',
+                    'resnetb_strided',
+                    'resnetb',
+                    'resnetb',
+                    'resnetb_strided',
+                    'resnetb',
+                    'resnetb',
+                    'resnetb_strided',
+                    'resnetb',
+                    'resnetb',
+                    'global_sum' ]
+
+    # Dimension of the first feature maps
+    first_features_dim: 64
+
+    # Batch normalization parameters
+    use_batch_norm: True
+    batch_norm_momentum: 0.02
+
+    ###################
+    # KPConv parameters
+    ###################
+
+    # Activation function
+    activation: relu
+
+    # Number of kernel points
+    num_kernel_points: 15
+
+    # Size of the first subsampling grid
+    first_subsampling_dl: ${data.first_subsampling}
+
+    # Radius of convolution in "number grid cell". (2.5 is the standard value)
+    conv_radius: 2.5
+
+    # Radius of deformable convolution in "number grid cell". Larger so that deformed kernel can spread out
+    deform_radius: 5.0
+
+    # Kernel point influence radius
+    KP_extent: 1.0
+
+    # Influence function when d < KP_extent. ('constant', 'linear', 'gaussian') When d > KP_extent, always zero
+    KP_influence: 'linear'
+
+    # Aggregation function of KPConv in ('closest', 'sum')
+    # Decide if you sum all kernel point influences, or if you only take the influence of the closest KP
+    aggregation_mode: 'sum'
+
+    # Fixed points in the kernel : 'none', 'center' or 'verticals'
+    fixed_kernel_points: 'center'
+
+    # Use modulateion in deformable convolutions
+    modulated: False
+
+    # Deformable offset loss
+    # 'point2point' fitting geometry by penalizing distance from deform point to input points
+    # 'point2plane' fitting geometry by penalizing distance from deform point to input point triplet (not implemented)
+    deform_fitting_mode: 'point2point'
+    deform_fitting_power: 1.0              # Multiplier for the fitting/repulsive loss
+    deform_lr_factor: 0.1                  # Multiplier for learning rate applied to the deformations
+    repulse_extent: 1.2                    # Distance of repulsion for deformed kernel points

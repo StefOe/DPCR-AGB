@@ -1,0 +1,31 @@
+# @package data
+
+treeadd_eval:
+  test_transform:
+    - transform: RadiusObjectAdder
+      params:
+        areas: {
+          treeDB: { type: object },
+        }
+        root_folder: ${data.dataroot}
+        dataset_name: treeDB
+        processed_folder: processed_treeDB_ALS
+        split: train
+        #processed_folder: merge_processed_instance_extra
+        rot_x: 0.0
+        rot_y: 0.0
+        rot_z: 180
+        min_radius: 15.1
+        max_radius: 20
+        n_max_objects: { scene: 20 }
+        adjust_point_density: False
+        in_memory: True
+        zero_center_z: True
+        p: 1.0
+        indicator_key: tree_add
+    - transform: CylinderExtend
+      params:
+        radius: 15.0
+        skip_list: ${data.skip_list}
+  train_transform: ${data.treeadd_eval.test_transform}
+  val_transform: ${data.treeadd_eval.test_transform}

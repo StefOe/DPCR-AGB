@@ -1,0 +1,31 @@
+# @package data
+defaults:
+  - instance/default
+  - instance/NFI/noground/default
+  - instance/NFI/transforms/xy
+  - instance/NFI/transforms/xy-grid
+  - instance/NFI/transforms/xy-treeadd-eval
+  - instance/NFI/transforms/xy-eval
+  - instance/NFI/transforms/sparse
+  - instance/NFI/transforms/sparse-xy
+  - instance/NFI/transforms/sparse-ori
+  - instance/NFI/transforms/sparse-skeleton
+  - instance/NFI/transforms/sparse-treeadd
+  - instance/NFI/transforms/sparse-xy-treeadd
+  - instance/NFI/transforms/sparse-eval
+  - instance/NFI/transforms/sparse-xy-eval
+  - instance/NFI/transforms/sparse-treeadd-inner
+  - instance/NFI/transforms/sparse-treeadd-eval
+  - instance/NFI/transforms/sparse-xy-treeadd-eval
+  - instance/NFI/transforms/fixed
+  - instance/NFI/transforms/fixed-xy
+  - instance/NFI/transforms/fixed-xy-treeadd-eval
+  - instance/NFI/transforms/fixed-xy-eval
+  - instance/NFI/transforms/fixed-skeleton
+
+processed_folder: "processed_nfi_reg_noground"
+targets: {
+  BMag_ha: { task: regression, weight: 0.5 },
+  V_ha: { task: regression, weight: 0.5 },
+} # metrics: m m cm
+

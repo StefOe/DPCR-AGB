@@ -1,0 +1,10 @@
+# @package models
+# Minkowski Engine: https://github.com/StanfordVL/MinkowskiEngine/blob/master/examples/minkunet.py
+
+PointNet:
+  class: pointnext.PointNext
+  conv_type: "PARTIAL_DENSE"
+  arch: "pointnet"
+  radius: ${data.first_subsampling}
+  stride: 4
+  num_points: 8192

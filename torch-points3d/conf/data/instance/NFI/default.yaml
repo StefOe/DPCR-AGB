@@ -1,0 +1,44 @@
+# @package data
+class: las_dataset.LasDataset
+name: LASRegression
+dataset_name: biomass
+task: instance
+dataroot: data
+transform_type: ???
+areas: {
+  NFI: {
+    type: object,
+    pt_files: [2014/*/*.las, 2018/*/*.las, 2019/*/*.las],
+    label_files: nfi.gpkg,
+    check_pt_crs: False,
+    pt_identifier: las_file
+  },
+}
+xy_radius: 15
+x_scale: 30
+y_scale: 30
+z_scale: 40
+x_center: 0.5
+y_center: 0.5
+first_subsampling: 0.0125
+split_col: "split"
+log_train_metrics: False
+save_local_stats: False
+in_memory: True
+min_pts_outer: 100
+min_pts_inner: 0
+skip_list: [ "y_mol", "y_mol_mask", "y_cls", "y_cls_mask", "y_reg", "y_reg_mask"]
+features: [ ]
+stats: [ ]
+pre_transform:
+  - transform: DBSCANZOutlierRemoval
+    params:
+      eps: 1.5 # in m
+      min_samples: 10
+      skip_list: ${data.skip_list}
+  - transform: StartZFromZero
+  - transform: ZFilter
+    params:
+      z_min: -1e-5
+      z_max: 50
+      skip_keys: ${data.skip_list}

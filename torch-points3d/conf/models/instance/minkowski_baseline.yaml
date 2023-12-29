@@ -1,0 +1,124 @@
+# @package models
+# Minkowski Engine: https://github.com/StanfordVL/MinkowskiEngine/blob/master/examples/minkunet.py
+
+MPointNet:
+  class: minkowski.MinkowskiBaselineModel
+  conv_type: "SPARSE"
+  model_name: "MinkowskiPointNet"
+  D: 3
+  activation: "relu"
+  first_stride: 2
+  dropout: 0.0
+  global_pool: mean
+  add_pos: True
+
+ResNet14:
+  class: minkowski.MinkowskiBaselineModel
+  conv_type: "SPARSE"
+  model_name: "ResNet14_"
+  D: 3
+  activation: "relu"
+  first_stride: 2
+  dropout: 0.0
+  drop_path: 0.01
+  global_pool: mean
+
+ResNet18:
+  class: minkowski.MinkowskiBaselineModel
+  conv_type: "SPARSE"
+  model_name: "ResNet18_"
+  D: 3
+  activation: "relu"
+  first_stride: 2
+  dropout: 0.0
+  drop_path: 0.01
+  global_pool: mean
+
+ResNet34:
+  class: minkowski.MinkowskiBaselineModel
+  conv_type: "SPARSE"
+  model_name: "ResNet34_"
+  D: 3
+  activation: "relu"
+  first_stride: 2
+  dropout: 0.0
+  drop_path: 0.01
+  global_pool: mean
+
+ResNet50:
+  class: minkowski.MinkowskiBaselineModel
+  conv_type: "SPARSE"
+  model_name: "ResNet50_"
+  D: 3
+  activation: "relu"
+  first_stride: 2
+  dropout: 0.0
+  drop_path: 0.01
+  global_pool: mean
+
+ResNet101:
+  class: minkowski.MinkowskiBaselineModel
+  conv_type: "SPARSE"
+  model_name: "ResNet101_"
+  D: 3
+  activation: "relu"
+  first_stride: 2
+  dropout: 0.0
+  drop_path: 0.01
+  global_pool: mean
+
+
+SENet14:
+  class: minkowski.MinkowskiBaselineModel
+  conv_type: "SPARSE"
+  model_name: "SENet14"
+  D: 3
+  activation: "relu"
+  first_stride: 2
+  dropout: 0.0
+  drop_path: 0.01
+  global_pool: mean
+
+SENet18:
+  class: minkowski.MinkowskiBaselineModel
+  conv_type: "SPARSE"
+  model_name: "SENet18"
+  D: 3
+  activation: "relu"
+  first_stride: 2
+  dropout: 0.0
+  drop_path: 0.01
+  global_pool: mean
+
+SENet34:
+  class: minkowski.MinkowskiBaselineModel
+  conv_type: "SPARSE"
+  model_name: "SENet34"
+  D: 3
+  activation: "relu"
+  first_stride: 2
+  dropout: 0.0
+  drop_path: 0.01
+  global_pool: mean
+
+SENet50:
+  class: minkowski.MinkowskiBaselineModel
+  conv_type: "SPARSE"
+  model_name: "SENet50"
+  D: 3
+  activation: "relu"
+  first_stride: 2
+  dropout: 0.0
+  drop_path: 0.01
+  global_pool: mean
+
+SENet101:
+  class: minkowski.MinkowskiBaselineModel
+  conv_type: "SPARSE"
+  model_name: "SENet101"
+  D: 3
+  activation: "relu"
+  first_stride: 2
+  dropout: 0.0
+  drop_path: 0.01
+  global_pool: mean
