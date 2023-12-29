@@ -1,15 +1,4 @@
-import logging
-
-log = logging.getLogger(__name__)
-
-try:
-    from .sparseconv3d import SparseConv3d
-except:
-    log.warning(
-        "Sparse convolutions are not supported, please install one of the available backends, MinkowskiEngine or MIT SparseConv"
-    )
-
 try:
     from .minkowski import Minkowski
 except:
-    log.warning("MinkowskiEngine is not installed.")
+    raise Exception("MinkowskiEngine is not installed.")

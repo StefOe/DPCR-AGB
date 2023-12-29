@@ -1,12 +1,9 @@
 # ReadMe
 
-This is the repository for the submitted Remote Sensing in Environment article: *Deep Point Cloud Regression for
+This is the repository for the *Remote Sensing of Environment* article: *Deep Point Cloud Regression for
 Above-Ground Forest Biomass Estimation from Airborne LiDAR*.
 
-To start unzip `biomasspointclouds.7z` with the password given in the supplementary material under Reproducability. (
-e.g. `7z x biomasspointclouds"`)
-
-We include **code**, **model weights** (soon), and the **dataset** (soon).
+We include **code**, **evaluation scripts**, **model weights** (soon), and the **dataset** (partly, soon all).
 
 Regarding the code:
 We forked the [torch-points3d](https://github.com/nicolas-chaulet/torch-points3d) framework and added support for
