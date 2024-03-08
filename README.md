@@ -3,6 +3,11 @@
 This is the repository for the *Remote Sensing of Environment* article: *Deep Point Cloud Regression for
 Above-Ground Forest Biomass Estimation from Airborne LiDAR*.
 
+When cloning the repository, make sure to also get submodules:
+```
+git clone --recurse-submodules https://github.com/StefOe/DPCR-AGB.git
+```
+
 We include **code**, **evaluation scripts**, **model weights** (soon), and the **dataset** (partly, soon all).
 
 Regarding the code:
