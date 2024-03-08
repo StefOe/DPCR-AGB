@@ -5,7 +5,6 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from torch_points3d.core.common_modules import FastBatchNorm1d
 from torch_points3d.models.instance.base import InstanceBase
 
 log = logging.getLogger(__name__)
@@ -13,20 +12,11 @@ log = logging.getLogger(__name__)
 
 class SeparateLinear(torch.nn.Module):
 
-    def __init__(self, in_channel, num_reg_classes, num_mixtures, num_cls_classes):
+    def __init__(self, in_channel, num_reg_classes):
         super(SeparateLinear, self).__init__()
         self.linears = []
         if num_reg_classes > 0:
             self.linears += [torch.nn.Linear(in_channel, 1, bias=True) for i in range(num_reg_classes)]
-        if len(num_mixtures) > 0:
-            self.linears += [
-                torch.nn.Linear(in_channel, num_mixtures * 3, bias=True) for i, num_mixtures in
-                enumerate(num_mixtures)
-            ]
-        if len(num_cls_classes) > 0:
-            self.linears += [
-                torch.nn.Linear(in_channel, num_classes) for num_classes in num_cls_classes
-            ]
 
         self.linears = torch.nn.ModuleList(self.linears)
 
@@ -48,7 +38,7 @@ class SimplestNet(InstanceBase):
             nn.GELU(),
             nn.BatchNorm1d(128),
         )
-        self.head = SeparateLinear(128, self.num_reg_classes, self.num_mixtures, self.num_cls_classes)
+        self.head = SeparateLinear(128, self.num_reg_classes)
         self.dataset_num_points = dataset.dataset_opt.fixed.num_points
         self._supports_mixed = True
 
@@ -85,12 +75,6 @@ class SimplestNet(InstanceBase):
             if self.has_reg_targets and data.y_reg is not None:
                 self.reg_y_mask = data.y_reg_mask.to(device).view(bs, -1)
                 self.reg_y = data.y_reg.to(device).view(bs, -1)
-            if self.has_mol_targets and data.y_mol is not None:
-                self.mol_y_mask = data.y_mol_mask.to(device).view(bs, -1)
-                self.mol_y = data.y_mol.to(device).view(bs, -1)
-            if self.has_cls_targets and data.y_cls is not None:
-                self.cls_y_mask = data.y_cls_mask.to(device).view(bs, -1)
-                self.cls_y = data.y_cls.to(device).view(bs, -1)
 
     def compute_loss(self):
         self.loss = 0
@@ -101,7 +85,7 @@ class SimplestNet(InstanceBase):
         x = F.adaptive_avg_pool1d(x, 1).squeeze(2)
         self.output = self.head(x)
 
-        self.reg_out, self.mol_out, self.cls_out = self.convert_outputs(self.output)
+        self.reg_out = self.convert_outputs(self.output)
         self.compute_loss()
 
         self.data_visual.pred = self.output

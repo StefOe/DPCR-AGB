@@ -3,11 +3,6 @@ import sys
 
 from .networks import *
 from .SENet import *
-from .VAE import *
-from .barlow import *
-from .UNet import *
-from .res16unet import *
-from .resunet import *
 from .PointNet import MinkowskiPointNet
 
 _custom_models = sys.modules[__name__]

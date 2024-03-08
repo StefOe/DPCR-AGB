@@ -19,8 +19,8 @@ areas: {
     #            'Juglans regia', 'Acer campestre', 'Betula pendula',
     #            'Prunus serotina', 'Robinia pseudoacacia', 'Sorbus torminalis',
     #            'Salix caprea'
-    alias_targets: [ height_m, mean_crown_diameter_m, DBH_cm, species ],
-    targets_must_be_present: [ False, False, False, False ],
+    alias_targets: [ height_m ],
+    targets_must_be_present: [ False ],
     pt_identifier: file_path,
     test_ratio: 0.1,
     val_ratio: 0.0

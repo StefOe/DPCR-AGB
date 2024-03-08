@@ -85,27 +85,6 @@ class InstanceTrackerInterface(TrackerInterface):
         """
 
     @abstractmethod
-    def get_mol_output(self):
-        """ returns a tensor of size ``[N_points,...]`` where each value is the mixture of logits output
-        of the network for a point (output of the last layer in general)
-        """
-    @abstractmethod
-    def get_cls_output(self):
-        """ returns a tensor of size ``[N_points,...]`` where each value is the classification output
-        of the network for a point (output of the last layer in general)
-        """
-
-    @abstractmethod
     def get_reg_input(self):
         """ returns the last regression input that was given to the model or raises error
-        """
-
-    @abstractmethod
-    def get_mol_input(self):
-        """ returns the last mixture of logits input that was given to the model or raises error
-        """
-
-    @abstractmethod
-    def get_cls_input(self):
-        """ returns the last classification input that was given to the model or raises error
         """

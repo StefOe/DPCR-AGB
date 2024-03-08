@@ -32,18 +32,6 @@ class InstanceTracker(BaseTracker):
         self.reg_targets_idx = dataset.reg_targets_idx
         self.reg_targets = dataset.reg_targets
 
-        self.has_mol_targets = dataset.has_mol_targets
-        self.mol_targets_idx = dataset.mol_targets_idx
-        self.mol_targets = dataset.mol_targets
-
-        self.has_cls_targets = dataset.has_cls_targets
-        self.cls_targets = dataset.cls_targets
-        self.cls_targets_idx = dataset.cls_targets_idx
-        self.cls_names = OrderedDict({
-            target_name: dataset.targets[target_name]["class_names"] for target_name in dataset.targets
-            if target_name in self.cls_targets
-        })
-
         self.area_names = dataset.areas.keys()
         self.area_name_map = OrderedDict({area_name: i for i, area_name in enumerate(self.area_names)})
 
@@ -74,20 +62,6 @@ class InstanceTracker(BaseTracker):
             })
         if self.has_reg_targets:
             self._metric_func.update({"loss_reg": min})
-        if self.has_mol_targets:
-            self._metric_func.update({"loss_mol": min})
-        if self.has_cls_targets:
-            self._metric_goals.update({
-                "acc": "maximize",
-                "macc": "maximize",
-                "_f1": "maximize",
-            })
-            self._metric_func.update({
-                # "acc": max,
-                # "macc": max,
-                "_f1": max,
-                "loss_cls": min,
-            })
 
         if wandb_log:
             self.wandb_metrics = []
@@ -98,9 +72,9 @@ class InstanceTracker(BaseTracker):
             area_names = [area_name for area_name in self.area_names
                           if self.target_means[area_name].get(stage, None) is not None]
             area_names.append("total")
-            if self.has_reg_targets or self.has_mol_targets:
-                targets = self.reg_targets + self.mol_targets
-                targets_idx = np.logical_or(self.reg_targets_idx, self.mol_targets_idx)
+            if self.has_reg_targets:
+                targets = self.reg_targets
+                targets_idx = self.reg_targets_idx
                 self._rmse = {area_name: {} for area_name in area_names}
                 self._mae = {area_name: {} for area_name in area_names}
                 self._r2 = {area_name: {} for area_name in area_names}
@@ -111,15 +85,6 @@ class InstanceTracker(BaseTracker):
                         self._rmse[area_name][target_name] = MSEMeter(root=True)
                         self._mae[area_name][target_name] = MAEMeter()
                         self._r2[area_name][target_name] = R2Meter(self.target_means[area_name][stage][targets_idx][i])
-
-            if self.has_cls_targets:
-                self._confusion_matrix = {area_name: {} for area_name in area_names}
-
-                for i, target_name in enumerate(self.cls_targets):
-                    for area_name in area_names:
-                        if np.isnan(self.target_means[area_name][stage][self.cls_targets_idx][i]).all():
-                            continue
-                        self._confusion_matrix[area_name][target_name] = ConfusionMatrix(self.cls_names[target_name])
 
     @staticmethod
     def detach_tensor(tensor):
@@ -146,24 +111,6 @@ class InstanceTracker(BaseTracker):
 
                 self.track_iterate_areas_targets(areas, outputs, target_names, targets, track_stats)
 
-            if self.has_mol_targets:
-                outputs = model.get_mol_output()
-                targets = model.get_mol_input()
-
-                track_stats = self.track_numerical_stats
-                target_names = self.mol_targets
-
-                self.track_iterate_areas_targets(areas, outputs, target_names, targets, track_stats)
-
-            if self.has_cls_targets:
-                targets = model.get_cls_input()
-                outputs = torch.stack([cls_out.argmax(1) for cls_out in model.get_cls_output()], 1)
-
-                track_stats = self.track_classification_stats
-                target_names = self.cls_names
-
-                self.track_iterate_areas_targets(areas, outputs, target_names, targets, track_stats)
-
     def track_iterate_areas_targets(self, areas, outputs, target_names, targets, track_stats):
         # ignore nan values
         targets_nan = torch.isnan(targets) if targets.dtype == torch.float else targets == -1
@@ -184,9 +131,6 @@ class InstanceTracker(BaseTracker):
                         track_stats(area_idx, area_name, out, target, target_name)
                 track_stats(torch.ones_like(area_idx), "total", out, target, target_name)
 
-    def track_classification_stats(self, area_idx, area_name, out, target, target_name):
-        self._confusion_matrix[area_name][target_name].count_predicted_batch(target[area_idx], out[area_idx])
-
     def track_numerical_stats(self, area_idx, area_name, out, target, target_name):
         self._rmse[area_name][target_name].add(out[area_idx], target[area_idx])
         self._mae[area_name][target_name].add(out[area_idx], target[area_idx])
@@ -200,9 +144,9 @@ class InstanceTracker(BaseTracker):
             area_names = list(self.area_names)
             area_names.append("total")
             for area_name in area_names:
-                if self.has_reg_targets or self.has_mol_targets:
+                if self.has_reg_targets:
                     if self._r2.get(area_name, None) is not None:
-                        for target_name in self.reg_targets + self.mol_targets:
+                        for target_name in self.reg_targets:
                             if self._r2[area_name].get(target_name, None) is None:
                                 continue
                             metrics[f"{self._stage}_{area_name}_{target_name}_rmse"] = \
@@ -211,36 +155,6 @@ class InstanceTracker(BaseTracker):
                                 self._mae[area_name][target_name].value()
                             metrics[f"{self._stage}_{area_name}_{target_name}_r2"] = \
                                 self._r2[area_name][target_name].value()
-                if self.has_cls_targets:
-                    if self._confusion_matrix.get(area_name, None) is not None:
-                        for target_name in self.cls_targets:
-                            cmat_obj = self._confusion_matrix[area_name].get(target_name, None)
-                            if cmat_obj is None or cmat_obj.confusion_matrix is None:
-                                continue
-
-                            stats, class_stats, cmat = cmat_obj.get_stats()
-                            for metric in stats:
-                                metrics[f"{self._stage}_{area_name}_{target_name}_{metric}"] = stats[metric]
-
-                            for metric, cls_name in class_stats:
-                                metrics[f"{self._stage}_{area_name}_{target_name}_{cls_name}:{metric}"] = \
-                                    class_stats[metric, cls_name]
-
-                            if self._wandb:
-                                data = []
-                                for i in range(cmat_obj.n_cls):
-                                    for j in range(cmat_obj.n_cls):
-                                        data.append([cmat_obj.cls_names[i], cmat_obj.cls_names[j], cmat[i, j]])
-
-                                cmat_table = wandb.Table(columns=["Actual", "Predicted", "nPredictions"], data=data)
-                                fields = {"Actual": "Actual", "Predicted": "Predicted", "nPredictions": "nPredictions"}
-                                cmat_plot = wandb.plot_table(
-                                    "wandb/confusion_matrix/v1",
-                                    cmat_table,
-                                    fields,
-                                    {"title": f"{self._stage}; {area_name}; {target_name}"},
-                                )
-                                metrics[f"{self._stage}_{area_name}_{target_name}_cmat"] = cmat_plot
 
         if self._wandb:
             # add metric to wandb if not there already

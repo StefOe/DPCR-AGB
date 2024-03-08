@@ -11,8 +11,6 @@ from torch_points3d.models.instance.base import InstanceBase
 from torch_points3d.modules.KPConv.architectures import KPCNN
 from torch_points3d.modules.KPConv.common import batch_grid_subsampling, batch_neighbors
 
-from time import time
-
 log = logging.getLogger(__name__)
 
 
@@ -24,21 +22,10 @@ class SeparateLinear(torch.nn.Module):
             self.linears = nn.ModuleList([nn.Linear(in_channel, 1, bias=True) for i in range(out_channels)])
         elif isinstance(out_channels, dict):
             num_reg_classes = out_channels.get("num_reg_classes", 0)
-            num_mixtures = out_channels.get("num_mixtures", [])
-            num_cls_classes = out_channels.get("num_cls_classes", [])
 
             self.linears = []
             if num_reg_classes > 0:
                 self.linears += [torch.nn.Linear(in_channel, 1, bias=True) for i in range(num_reg_classes)]
-            if len(num_mixtures) > 0:
-                self.linears += [
-                    torch.nn.Linear(in_channel, num_mixtures * 3, bias=True) for i, num_mixtures in
-                    enumerate(num_mixtures)
-                ]
-            if len(num_cls_classes) > 0:
-                self.linears += [
-                    torch.nn.Linear(in_channel, num_classes) for num_classes in num_cls_classes
-                ]
 
             self.linears = torch.nn.ModuleList(self.linears)
         else:
@@ -102,8 +89,6 @@ class KPConv(InstanceBase):
         return SeparateLinear(
             in_channel, {
                 "num_reg_classes": self.num_reg_classes,
-                "num_mixtures": self.num_mixtures,
-                "num_cls_classes": self.num_cls_classes
             }
         )
 
@@ -285,7 +270,7 @@ class KPConv(InstanceBase):
     def forward(self, *args, **kwargs):
         out = self.model(self.input)
         self.output = self.head(out)
-        self.reg_out, self.mol_out, self.cls_out = self.convert_outputs(self.output)
+        self.reg_out = self.convert_outputs(self.output)
         self.compute_loss()
 
         self.data_visual.pred = self.output
