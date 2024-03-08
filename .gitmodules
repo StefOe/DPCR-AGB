@@ -1,0 +1,3 @@
+[submodule "torch-points3d/openpoints"]
+	path = torch-points3d/openpoints
+	url = https://github.com/guochengqian/openpoints/
