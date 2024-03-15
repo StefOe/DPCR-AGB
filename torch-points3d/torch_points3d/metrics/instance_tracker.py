@@ -49,7 +49,7 @@ class InstanceTracker(BaseTracker):
         self._metric_func = {
             "loss": min,
         }
-        if self.has_reg_targets or self.has_mol_targets:
+        if self.has_reg_targets:
             self._metric_goals.update({
                 "_rmse": "minimize",
                 "_mae": "minimize",
