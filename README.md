@@ -8,7 +8,7 @@ When cloning the repository, make sure to also get submodules:
 git clone --recurse-submodules https://github.com/StefOe/DPCR-AGB.git
 ```
 
-We include **code**, **evaluation scripts**, **model weights** (soon), and the **dataset** (partly, soon all).
+We include **code**, **evaluation scripts**, **model weights** (soon), and the **dataset**.
 
 Regarding the code:
 We forked the [torch-points3d](https://github.com/nicolas-chaulet/torch-points3d) framework and added support for
@@ -113,6 +113,17 @@ pip install -U git+https://github.com/NVIDIA/MinkowskiEngine -v --no-deps --conf
 ```
 sh compile_wrappers.sh
 ```
+
+# Get the Data
+
+to get the preprocessed lidar and nfi data, go to the torch-points3d folder (`cd torch-points3d`)  and download:
+
+```
+wget https://sid.erda.dk/share_redirect/bB1TBPTsEk
+mv bB1TBPTsEk nfi_preprocessed_data.zip
+unzip nfi_preprocessed_data.zip
+```
+the data should now be in `data/biomass/processed_nfi_reg/` given the root folder is torch-points3d.
 
 # Training for Regression
 
