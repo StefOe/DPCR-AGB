@@ -6,10 +6,10 @@ MPointNet:
   conv_type: "SPARSE"
   model_name: "MinkowskiPointNet"
   D: 3
-  activation: "relu"
-  first_stride: 2
+  activation: "gelu"
+  first_stride: 1
   dropout: 0.0
-  global_pool: mean
+  global_pool: sum
   add_pos: True
 
 ResNet14:
@@ -17,55 +17,55 @@ ResNet14:
   conv_type: "SPARSE"
   model_name: "ResNet14_"
   D: 3
-  activation: "relu"
-  first_stride: 2
+  activation: "gelu"
+  first_stride: 1
   dropout: 0.0
   drop_path: 0.01
-  global_pool: mean
+  global_pool: sum
 
 ResNet18:
   class: minkowski.MinkowskiBaselineModel
   conv_type: "SPARSE"
   model_name: "ResNet18_"
   D: 3
-  activation: "relu"
-  first_stride: 2
+  activation: "gelu"
+  first_stride: 1
   dropout: 0.0
   drop_path: 0.01
-  global_pool: mean
+  global_pool: sum
 
 ResNet34:
   class: minkowski.MinkowskiBaselineModel
   conv_type: "SPARSE"
   model_name: "ResNet34_"
   D: 3
-  activation: "relu"
-  first_stride: 2
+  activation: "gelu"
+  first_stride: 1
   dropout: 0.0
   drop_path: 0.01
-  global_pool: mean
+  global_pool: sum
 
 ResNet50:
   class: minkowski.MinkowskiBaselineModel
   conv_type: "SPARSE"
   model_name: "ResNet50_"
   D: 3
-  activation: "relu"
-  first_stride: 2
+  activation: "gelu"
+  first_stride: 1
   dropout: 0.0
   drop_path: 0.01
-  global_pool: mean
+  global_pool: sum
 
 ResNet101:
   class: minkowski.MinkowskiBaselineModel
   conv_type: "SPARSE"
   model_name: "ResNet101_"
   D: 3
-  activation: "relu"
-  first_stride: 2
+  activation: "gelu"
+  first_stride: 1
   dropout: 0.0
   drop_path: 0.01
-  global_pool: mean
+  global_pool: sum
 
 
 SENet14:
@@ -73,52 +73,52 @@ SENet14:
   conv_type: "SPARSE"
   model_name: "SENet14"
   D: 3
-  activation: "relu"
-  first_stride: 2
+  activation: "gelu"
+  first_stride: 1
   dropout: 0.0
   drop_path: 0.01
-  global_pool: mean
+  global_pool: sum
 
 SENet18:
   class: minkowski.MinkowskiBaselineModel
   conv_type: "SPARSE"
   model_name: "SENet18"
   D: 3
-  activation: "relu"
-  first_stride: 2
+  activation: "gelu"
+  first_stride: 1
   dropout: 0.0
   drop_path: 0.01
-  global_pool: mean
+  global_pool: sum
 
 SENet34:
   class: minkowski.MinkowskiBaselineModel
   conv_type: "SPARSE"
   model_name: "SENet34"
   D: 3
-  activation: "relu"
-  first_stride: 2
+  activation: "gelu"
+  first_stride: 1
   dropout: 0.0
   drop_path: 0.01
-  global_pool: mean
+  global_pool: sum
 
 SENet50:
   class: minkowski.MinkowskiBaselineModel
   conv_type: "SPARSE"
   model_name: "SENet50"
   D: 3
-  activation: "relu"
-  first_stride: 2
+  activation: "gelu"
+  first_stride: 1
   dropout: 0.0
   drop_path: 0.01
-  global_pool: mean
+  global_pool: sum
 
 SENet101:
   class: minkowski.MinkowskiBaselineModel
   conv_type: "SPARSE"
   model_name: "SENet101"
   D: 3
-  activation: "relu"
-  first_stride: 2
+  activation: "gelu"
+  first_stride: 1
   dropout: 0.0
   drop_path: 0.01
-  global_pool: mean
+  global_pool: sum
