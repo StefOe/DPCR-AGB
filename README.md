@@ -179,7 +179,7 @@ Also, there are 5 weights for each model (from different trials): `TRIAL=1`
 *MSENet50:*
 
 ```
-python eval.py model_name=SENet50 checkpoint_dir=${PATHTOFRAMEWORK}/weights/SENet50/${TRIAL}/ weight_name="latest" batch_size=32 num_workers=4 eval_stages=["val","test"] data.transform_type=sparse_xy_eval data=instance/NFI/reg task=instance
+python eval.py model_name=SENet50 checkpoint_dir=${PATHTOFRAMEWORK}/weights/SENet50/${TRIAL}/ weight_name="latest" batch_size=32 num_workers=4 eval_stages=["train","val","test"] data.transform_type=sparse_xy_eval data=instance/NFI/reg task=instance
 ```
 
 the save folder location is `weights/msenet50/eval`.
@@ -187,7 +187,7 @@ the save folder location is `weights/msenet50/eval`.
 *MSENet14:*
 
 ```
-python eval.py model_name=SENet14 checkpoint_dir=${PATHTOFRAMEWORK}/weights/SENet14/${TRIAL}/ weight_name="latest" batch_size=32 num_workers=4 eval_stages=["val","test"] data.transform_type=sparse_xy_eval data=instance/NFI/reg task=instance
+python eval.py model_name=SENet14 checkpoint_dir=${PATHTOFRAMEWORK}/weights/SENet14/${TRIAL}/ weight_name="latest" batch_size=32 num_workers=4 eval_stages=["train","val","test"] data.transform_type=sparse_xy_eval data=instance/NFI/reg task=instance
 ```
 
 the save folder location is `weights/msenet14/eval`.
@@ -195,7 +195,7 @@ the save folder location is `weights/msenet14/eval`.
 *KPConv:*
 
 ```
-python eval.py model_name=KPConv checkpoint_dir=${PATHTOFRAMEWORK}/weights/KPConv/${TRIAL}/ weight_name="latest" batch_size=32 num_workers=4 eval_stages=["val","test"] data.transform_type=xy_eval data=instance/NFI/reg task=instance
+python eval.py model_name=KPConv checkpoint_dir=${PATHTOFRAMEWORK}/weights/KPConv/${TRIAL}/ weight_name="latest" batch_size=32 num_workers=4 eval_stages=["train","val","test"] data.transform_type=xy_eval data=instance/NFI/reg task=instance
 ```
 
 the save folder location is `weights/kpconv/eval`.
@@ -203,7 +203,7 @@ the save folder location is `weights/kpconv/eval`.
 *PointNet:*
 
 ```
-python eval.py model_name=MPointNet checkpoint_dir=${PATHTOFRAMEWORK}/weights/PointNet/${TRIAL}/ weight_name="latest" batch_size=32 num_workers=4 eval_stages=["val","test"] data.transform_type=sparse_xy_eval data=instance/NFI/reg task=instance
+python eval.py model_name=MPointNet checkpoint_dir=${PATHTOFRAMEWORK}/weights/PointNet/${TRIAL}/ weight_name="latest" batch_size=32 num_workers=4 eval_stages=["train","val","test"] data.transform_type=sparse_xy_eval data=instance/NFI/reg task=instance
 ```
 
 the save folder location is `weights/pointnet/eval`.
@@ -213,5 +213,5 @@ the save folder location is `weights/pointnet/eval`.
 same as before, but the transform type changes to use tree augmentations, e.g.:
 
 ```
-python eval.py model_name=MPointNet checkpoint_dir=${PATHTOFRAMEWORK}/weights/pointnet/ weight_name="total_rmse" batch_size=32 num_workers=4 eval_stages=["val","test"] data.transform_type=sparse_xy_eval_treeadd
+python eval.py model_name=MPointNet checkpoint_dir=${PATHTOFRAMEWORK}/weights/pointnet/ weight_name="total_rmse" batch_size=32 num_workers=4 eval_stages=["train","val","test"] data.transform_type=sparse_xy_eval_treeadd
 ```
